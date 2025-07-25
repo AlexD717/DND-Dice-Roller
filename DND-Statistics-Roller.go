@@ -80,4 +80,8 @@ func main() {
 	timeTake := endTime.Sub(startTime)
 
 	fmt.Println("Total time taken: " + timeTake.String())
+	
+	fmt.Println("Press Enter to exit...")
+	var input string
+	fmt.Scanln(&input)
 }
