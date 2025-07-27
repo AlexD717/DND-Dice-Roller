@@ -66,7 +66,7 @@ func worker(workerRepeat int, results chan<- []int, wg *sync.WaitGroup) {
 	for i :=0; i < workerRepeat; i++ {
 		currentRoll := rollStats()
 		currentRollScore := sum(currentRoll)
-		if (sum(currentRoll) > highestScore) {
+		if (currentRollScore > highestScore) {
 			highestScore = currentRollScore
 			highestRoll = currentRoll
 		}
