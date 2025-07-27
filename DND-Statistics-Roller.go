@@ -3,10 +3,12 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"runtime"
+	"sync"
 	"time"
 )
 
-const workerRepeat = 1000000
+const totalSimulationTimes = 1000000
 
 func removeFromList(list []int, value int) []int {
 	for i, v := range list {
@@ -55,7 +57,9 @@ func rollStats() []int {
 	return stats
 }
 
-func worker() []int {
+func worker(workerRepeat int, results chan<- []int, wg *sync.WaitGroup) {
+	defer wg.Done()
+
 	highestRoll := []int{}
 	highestScore := 0
 
@@ -68,13 +72,41 @@ func worker() []int {
 		}
 	}
 
-	return highestRoll
+	results <- highestRoll
 }
 
 func main() {
 	startTime := time.Now()
 
-	fmt.Println(worker())
+	numWorkers := runtime.NumCPU()
+	workerRepeat := totalSimulationTimes/numWorkers
+	runtime.GOMAXPROCS(runtime.NumCPU())
+	fmt.Printf("Utilizing %d CPU Threads\n", numWorkers)
+
+	var wg sync.WaitGroup
+
+	results := make(chan []int, numWorkers)
+
+	for i := 0; i < numWorkers; i++ {
+		wg.Add(1)
+		go worker(workerRepeat, results, &wg)
+	}
+
+	wg.Wait()
+	close(results)
+	
+	highestScore := 0
+	highestRoll := []int{}
+	for result := range(results) {
+		resultScore := sum(result)
+		if (resultScore > highestScore) {
+			highestRoll = result
+			highestScore = resultScore
+		}
+	}
+
+	fmt.Printf("Highest Stats Rolled: ")
+	fmt.Println(highestRoll)
 
 	endTime := time.Now()
 	timeTake := endTime.Sub(startTime)
