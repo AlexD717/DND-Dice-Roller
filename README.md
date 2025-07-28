@@ -1,11 +1,21 @@
 # DnD-Dice-Roller
 Rolls your D&D character stats millions of times, giving you the best result.
 
+## Installation/Running
+### Windows
+Open the latest release, download the .windows.exe file, and double click to run it
+
+### Linux
+Open the latest release, download the .linux.amd64 file, navigate to it in the terminal and then run it
+
+### MacOS
+Not yet supported
+
 ## Results
 Speed Summary (For 1 million stat rolls):
-Python ~9.8
-Go ~850 ms
-Go (multithread) ~150 ms (16 cores)
+- Python ~9.8
+- Go ~850 ms
+- Go (multithread) ~150 ms (16 cores)
 
 ## Why am I doing this
 I already have a Python script that performs this task, but it's fairly slow, taking around 9.8 seconds to process a million roles. This time, I am using Go and leveraging multithreading to make it incredibly fast.
